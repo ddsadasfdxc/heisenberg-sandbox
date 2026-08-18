@@ -1016,11 +1016,11 @@
             "substituteRegex": true,
             "minDepth": 0,
             "maxDepth": 0,
-            "id": "800b6cba-db11-46af-b574-5ec5ef0f4f51"
+            "id": "19a71d2c-19d6-4057-9aff-1e4a47fbe7e5"
           },
           {
             "active": true,
-            "id": "e22d0655-c099-4846-961a-f2a5af76cf54",
+            "id": "fea7755c-b7a7-4e44-8525-61b13e47206a",
             "script": "import 'https://gcore.jsdelivr.net/gh/MagicalAstrogy/MagVarUpdate@master/artifact/bundle.js'",
             "scriptName": "MVU·变量更新引擎"
           }
@@ -1073,29 +1073,39 @@
           "scriptName": "SAUL-OS 建号前端注入",
           "findRegex": "\\[SAUL-OS\\]\\s*INIT",
           "replaceString": "<iframe src=\"https://ddsadasfdxc.github.io/heisenberg-sandbox/onboard.html\" style=\"width:100%;min-height:760px;border:none;border-radius:14px;background:#0c0b09\" allowtransparency=\"true\"></iframe>",
-          "trimStrings": false,
-          "placement": 0,
+          "trimStrings": [],
+          "placement": [
+            1,
+            2
+          ],
           "disabled": false,
-          "markdownOnly": false,
+          "markdownOnly": true,
           "promptOnly": false,
           "runOnEdit": false,
-          "substituteRegex": true,
-          "minDepth": 0,
-          "maxDepth": 1000
+          "substituteRegex": 0,
+          "minDepth": null,
+          "maxDepth": null,
+          "markov": false,
+          "id": "5504824c-3362-475f-9488-eed283f4b012"
         },
         {
           "scriptName": "建号完成 → 状态确认（触发initvar）",
           "findRegex": "\\[SAUL-OS\\]\\s*READY\\s*([\\s\\S]{0,2000}?)",
-          "replaceString": "[系统] 身份登记完成，正在初始化世界状态...\n<initvar>请根据上方玩家建号信息填入全部字段</initvar>",
-          "trimStrings": false,
-          "placement": 0,
+          "replaceString": "<div style=\"padding:14px 18px;color:#e8c76a;font-family:monospace;border-left:3px solid #d99a1b;background:rgba(217,154,27,.08);border-radius:6px\">[系统] 身份登记完成，正在初始化世界状态…</div>\n<initvar>请根据上方玩家建号信息填入全部字段</initvar>",
+          "trimStrings": [],
+          "placement": [
+            1,
+            2
+          ],
           "disabled": false,
-          "markdownOnly": false,
+          "markdownOnly": true,
           "promptOnly": false,
           "runOnEdit": false,
-          "substituteRegex": true,
-          "minDepth": 0,
-          "maxDepth": 1000
+          "substituteRegex": 0,
+          "minDepth": null,
+          "maxDepth": null,
+          "markov": false,
+          "id": "3fb5bb18-7652-4e19-a64d-b34b1c06a25c"
         }
       ],
       "frontend": {
