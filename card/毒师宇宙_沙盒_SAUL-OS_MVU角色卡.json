@@ -20,112 +20,8 @@
       "高自由"
     ],
     "creator": "ddsadasfdxc",
-    "character_version": "1.0.0",
+    "character_version": "1.1.0",
     "alternate_greetings": [],
-    "extensions": {
-      "tavern_helper": {
-        "scripts": [
-          {
-            "scriptName": "毒师宇宙·建号配置序列解析",
-            "findRegex": "【毒师宇宙·沙盒 建号完成】\\n身份类型：(.+?)\\n姓名：(.+?)（(.+?)，(.+?)岁）\\n职业起点：(.+?)\\n出身：(.+?)\\n性格：(.+?)\\n核心目标：(.+?) \\| 道德底线：(.+?)\\n时间线：(.+?)年（(.+?)）\\| 初始资金：\\$(.+?) \\| 初始纯度：(.+?)% \\| 初始规模：(.+?)\\nDLC：(.+?)\\n请根据以上信息在主世界初始化我的状态，并开启对应剧情线。",
-            "replaceString": "{{setVar|identity.type|$1}}{{setVar|identity.name|$2}}{{setVar|identity.sex|$3}}{{setVar|identity.age|$4}}{{setVar|identity.job|$5}}{{setVar|identity.origin|$6}}{{setVar|identity.trait|$7}}{{setVar|identity.goal|$8}}{{setVar|identity.morality|$9}}{{setVar|timeline|$10}}{{setVar|era|$11}}{{setVar|assets.cash|$12}}{{setVar|purity|$13}}{{setVar|scale|$14}}{{setVar|dlc|$15}}",
-            "trimStrings": false,
-            "placement": 0,
-            "disabled": false,
-            "markdownOnly": false,
-            "promptOnly": false,
-            "runOnEdit": false,
-            "substituteRegex": true,
-            "minDepth": 0,
-            "maxDepth": 0,
-            "id": "39488854-190e-4d61-aa7f-998a11d132cc"
-          },
-          {
-            "active": true,
-            "id": "ad6aab52-4fd2-4ca6-9829-6a577be00a41",
-            "script": "import 'https://gcore.jsdelivr.net/gh/MagicalAstrogy/MagVarUpdate@master/artifact/bundle.js'",
-            "scriptName": "MVU·变量更新引擎"
-          }
-        ],
-        "variables": [
-          "identity.type",
-          "identity.name",
-          "identity.sex",
-          "identity.age",
-          "identity.job",
-          "identity.origin",
-          "identity.trait",
-          "identity.goal",
-          "identity.morality",
-          "timeline",
-          "era",
-          "assets.cash",
-          "purity",
-          "scale",
-          "dlc",
-          "cash",
-          "supply_chain",
-          "heat",
-          "legal_exposure",
-          "territory",
-          "rep",
-          "standing.salamanca",
-          "standing.gus",
-          "standing.dea",
-          "standing.street",
-          "assets.property",
-          "assets.inventory",
-          "assets.labs",
-          "phase",
-          "log"
-        ]
-      },
-      "mvu": {
-        "schema": "{\n  cash: z.number().min(0).describe(\"现金余额（美元）\"),\n  purity: z.number().min(0).max(99.1).describe(\"产品纯度（%）\"),\n  supply_chain: z.number().min(0).max(100).describe(\"供应链强度 0-100\"),\n  heat: z.number().min(0).max(100).describe(\"DEA通缉/危险度 0-100\"),\n  legal_exposure: z.number().min(0).max(100).describe(\"法律风险敞口 0-100\"),\n  standing: {\n    salamanca: z.number().min(-100).max(100).describe(\"萨拉曼卡阵营关系\"),\n    gus: z.number().min(-100).max(100).describe(\"古斯网络关系\"),\n    dea: z.number().min(-100).max(100).describe(\"DEA敌意/接触\"),\n    street: z.number().min(-100).max(100).describe(\"街头势力关系\")\n  },\n  territory: z.number().min(0).max(100).describe(\"地盘控制力 0-100\"),\n  rep: z.number().min(0).max(100).describe(\"江湖声望 0-100\"),\n  assets: {\n    cash: z.number().min(0).describe(\"流动资产\"),\n    property: z.number().min(0).describe(\"固定资产（洗衣厂/房产等）\"),\n    inventory: z.number().min(0).describe(\"在库产品（单位）\"),\n    labs: z.number().min(0).describe(\"实验室/产线数量\")\n  },\n  timeline: z.string().describe(\"时间线年份\"),\n  identity: {\n    type: z.enum([\"traveller\",\"canon\",\"custom\"]).describe(\"身份类型\"),\n    name: z.string().describe(\"姓名/代号\"),\n    goal: z.string().describe(\"核心目标\"),\n    morality: z.enum([\"lawful\",\"gray\",\"amoral\"]).describe(\"道德底线\")\n  },\n  dlc: z.array(z.string()).describe(\"已开启DLC玩法\"),\n  phase: z.string().describe(\"当前主剧情阶段\"),\n  log: z.array(z.string()).max(20).describe(\"最近事件日志（最多20条）\")\n}",
-        "initvar": "<initvar>{\n  cash: <cash>,\n  purity: <purity>,\n  supply_chain: <from_scale>,\n  heat: 20,\n  legal_exposure: 25,\n  standing: { salamanca: 0, gus: 0, dea: 0, street: 10 },\n  territory: <from_scale>,\n  rep: 10,\n  assets: { cash: <cash>, property: 0, inventory: 0, labs: <from_scale> },\n  timeline: \"<year>\",\n  identity: { type: \"<idType>\", name: \"<name>\", goal: \"<goal>\", morality: \"<morality>\" },\n  dlc: [<dlc>],\n  phase: \"开局\",\n  log: [\"身份登记完成\"]\n}</initvar>",
-        "update_rules": "\n【变量更新规则】(输出 <setvar> 或 <patchvar>)\n- 资金变动：现金流入流出实时更新 cash\n- 纯度：产品升级/配方改良更新 purity\n- 危险度 heat：被目击、暴力事件、制毒规模扩大均上升；低调行事下降\n- 法律风险 legal_exposure：证据链、证人、DEA盯梢驱动\n- 势力关系 standing：对各方利益让渡或冲突实时调整\n- 地盘 territory：扩张/收缩\n- 事件追加 log（最多20条，超出移除最旧）\n禁止把剧情散文写进变量规则；只更新实际状态变化。\n",
-        "recipient": [
-          "plot",
-          "update"
-        ]
-      },
-      "cot_increment": "\n<system>\n你身处《绝命毒师》《风骚律师》构成的「毒师宇宙·沙盒」。玩家拥有绝对自由度，可在2002/2008/2010及之后任意时间线经营、博弈、冒险。\n每次交互前，在思考中快速校验下列项（不输出给玩家）：\n[状态] 当前现金、纯度、供应链、危险度、法律风险、四势力关系、地盘、声望。\n[态势] 玩家目标是否推进？DEA是否逼近？各方势力当前态度？\n[后果] 玩家本次行为对 heat / legal_exposure / 势力 standing 的增减方向？\n[世界] 当前时间线下哪些角色/地点/事件可能被触发（萨拉曼卡、古斯网络、DEA、街头）？\n然后用叙事语言推动剧情，并在结尾以 <setvar> 或 <patchvar> 一次性提交实际状态变化。\n</system>\n",
-      "regex_scripts": [
-        {
-          "scriptName": "SAUL-OS 建号前端注入",
-          "findRegex": "\\[SAUL-OS\\]\\s*INIT",
-          "replaceString": "<iframe src=\"https://ddsadasfdxc.github.io/heisenberg-sandbox/onboard.html\" style=\"width:100%;min-height:760px;border:none;border-radius:14px;background:#0c0b09\" allowtransparency=\"true\"></iframe>",
-          "trimStrings": false,
-          "placement": 0,
-          "disabled": false,
-          "markdownOnly": false,
-          "promptOnly": false,
-          "runOnEdit": false,
-          "substituteRegex": true,
-          "minDepth": 0,
-          "maxDepth": 1000
-        },
-        {
-          "scriptName": "建号完成 → 状态确认（触发initvar）",
-          "findRegex": "\\[SAUL-OS\\]\\s*READY\\s*([\\s\\S]{0,2000}?)",
-          "replaceString": "[系统] 身份登记完成，正在初始化世界状态...\n<initvar>请根据上方玩家建号信息填入全部字段</initvar>",
-          "trimStrings": false,
-          "placement": 0,
-          "disabled": false,
-          "markdownOnly": false,
-          "promptOnly": false,
-          "runOnEdit": false,
-          "substituteRegex": true,
-          "minDepth": 0,
-          "maxDepth": 1000
-        }
-      ],
-      "frontend": {
-        "url": "https://ddsadasfdxc.github.io/heisenberg-sandbox/onboard.html",
-        "repo": "ddsadasfdxc/heisenberg-sandbox",
-        "note": "AI开场白占位符 [SAUL-OS] INIT 被正则替换为建号 iframe；玩家填表后合成消息触发 initvar"
-      }
-    },
     "character_book": {
       "entries": [
         {
@@ -1102,6 +998,110 @@
           "BreakingBad",
           "BetterCallSaul"
         ]
+      }
+    },
+    "extensions": {
+      "tavern_helper": {
+        "scripts": [
+          {
+            "scriptName": "毒师宇宙·建号配置序列解析",
+            "findRegex": "【毒师宇宙·沙盒 建号完成】\\n身份类型：(.+?)\\n姓名：(.+?)（(.+?)，(.+?)岁）\\n职业起点：(.+?)\\n出身：(.+?)\\n性格：(.+?)\\n核心目标：(.+?) \\| 道德底线：(.+?)\\n时间线：(.+?)年（(.+?)）\\| 初始资金：\\$(.+?) \\| 初始纯度：(.+?)% \\| 初始规模：(.+?)\\nDLC：(.+?)\\n请根据以上信息在主世界初始化我的状态，并开启对应剧情线。",
+            "replaceString": "{{setVar|identity.type|$1}}{{setVar|identity.name|$2}}{{setVar|identity.sex|$3}}{{setVar|identity.age|$4}}{{setVar|identity.job|$5}}{{setVar|identity.origin|$6}}{{setVar|identity.trait|$7}}{{setVar|identity.goal|$8}}{{setVar|identity.morality|$9}}{{setVar|timeline|$10}}{{setVar|era|$11}}{{setVar|assets.cash|$12}}{{setVar|purity|$13}}{{setVar|scale|$14}}{{setVar|dlc|$15}}",
+            "trimStrings": false,
+            "placement": 0,
+            "disabled": false,
+            "markdownOnly": false,
+            "promptOnly": false,
+            "runOnEdit": false,
+            "substituteRegex": true,
+            "minDepth": 0,
+            "maxDepth": 0,
+            "id": "800b6cba-db11-46af-b574-5ec5ef0f4f51"
+          },
+          {
+            "active": true,
+            "id": "e22d0655-c099-4846-961a-f2a5af76cf54",
+            "script": "import 'https://gcore.jsdelivr.net/gh/MagicalAstrogy/MagVarUpdate@master/artifact/bundle.js'",
+            "scriptName": "MVU·变量更新引擎"
+          }
+        ],
+        "variables": [
+          "identity.type",
+          "identity.name",
+          "identity.sex",
+          "identity.age",
+          "identity.job",
+          "identity.origin",
+          "identity.trait",
+          "identity.goal",
+          "identity.morality",
+          "timeline",
+          "era",
+          "assets.cash",
+          "purity",
+          "scale",
+          "dlc",
+          "cash",
+          "supply_chain",
+          "heat",
+          "legal_exposure",
+          "territory",
+          "rep",
+          "standing.salamanca",
+          "standing.gus",
+          "standing.dea",
+          "standing.street",
+          "assets.property",
+          "assets.inventory",
+          "assets.labs",
+          "phase",
+          "log"
+        ]
+      },
+      "mvu": {
+        "schema": "{\n  cash: z.number().min(0).describe(\"现金余额（美元）\"),\n  purity: z.number().min(0).max(99.1).describe(\"产品纯度（%）\"),\n  supply_chain: z.number().min(0).max(100).describe(\"供应链强度 0-100\"),\n  heat: z.number().min(0).max(100).describe(\"DEA通缉/危险度 0-100\"),\n  legal_exposure: z.number().min(0).max(100).describe(\"法律风险敞口 0-100\"),\n  standing: {\n    salamanca: z.number().min(-100).max(100).describe(\"萨拉曼卡阵营关系\"),\n    gus: z.number().min(-100).max(100).describe(\"古斯网络关系\"),\n    dea: z.number().min(-100).max(100).describe(\"DEA敌意/接触\"),\n    street: z.number().min(-100).max(100).describe(\"街头势力关系\")\n  },\n  territory: z.number().min(0).max(100).describe(\"地盘控制力 0-100\"),\n  rep: z.number().min(0).max(100).describe(\"江湖声望 0-100\"),\n  assets: {\n    cash: z.number().min(0).describe(\"流动资产\"),\n    property: z.number().min(0).describe(\"固定资产（洗衣厂/房产等）\"),\n    inventory: z.number().min(0).describe(\"在库产品（单位）\"),\n    labs: z.number().min(0).describe(\"实验室/产线数量\")\n  },\n  timeline: z.string().describe(\"时间线年份\"),\n  identity: {\n    type: z.enum([\"traveller\",\"canon\",\"custom\"]).describe(\"身份类型\"),\n    name: z.string().describe(\"姓名/代号\"),\n    goal: z.string().describe(\"核心目标\"),\n    morality: z.enum([\"lawful\",\"gray\",\"amoral\"]).describe(\"道德底线\")\n  },\n  dlc: z.array(z.string()).describe(\"已开启DLC玩法\"),\n  phase: z.string().describe(\"当前主剧情阶段\"),\n  log: z.array(z.string()).max(20).describe(\"最近事件日志（最多20条）\")\n}",
+        "initvar": "<initvar>{\n  cash: <cash>,\n  purity: <purity>,\n  supply_chain: <from_scale>,\n  heat: 20,\n  legal_exposure: 25,\n  standing: { salamanca: 0, gus: 0, dea: 0, street: 10 },\n  territory: <from_scale>,\n  rep: 10,\n  assets: { cash: <cash>, property: 0, inventory: 0, labs: <from_scale> },\n  timeline: \"<year>\",\n  identity: { type: \"<idType>\", name: \"<name>\", goal: \"<goal>\", morality: \"<morality>\" },\n  dlc: [<dlc>],\n  phase: \"开局\",\n  log: [\"身份登记完成\"]\n}</initvar>",
+        "update_rules": "\n【变量更新规则】(输出 <setvar> 或 <patchvar>)\n- 资金变动：现金流入流出实时更新 cash\n- 纯度：产品升级/配方改良更新 purity\n- 危险度 heat：被目击、暴力事件、制毒规模扩大均上升；低调行事下降\n- 法律风险 legal_exposure：证据链、证人、DEA盯梢驱动\n- 势力关系 standing：对各方利益让渡或冲突实时调整\n- 地盘 territory：扩张/收缩\n- 事件追加 log（最多20条，超出移除最旧）\n禁止把剧情散文写进变量规则；只更新实际状态变化。\n",
+        "recipient": [
+          "plot",
+          "update"
+        ]
+      },
+      "cot_increment": "\n<system>\n你身处《绝命毒师》《风骚律师》构成的「毒师宇宙·沙盒」。玩家拥有绝对自由度，可在2002/2008/2010及之后任意时间线经营、博弈、冒险。\n每次交互前，在思考中快速校验下列项（不输出给玩家）：\n[状态] 当前现金、纯度、供应链、危险度、法律风险、四势力关系、地盘、声望。\n[态势] 玩家目标是否推进？DEA是否逼近？各方势力当前态度？\n[后果] 玩家本次行为对 heat / legal_exposure / 势力 standing 的增减方向？\n[世界] 当前时间线下哪些角色/地点/事件可能被触发（萨拉曼卡、古斯网络、DEA、街头）？\n然后用叙事语言推动剧情，并在结尾以 <setvar> 或 <patchvar> 一次性提交实际状态变化。\n</system>\n",
+      "regex_scripts": [
+        {
+          "scriptName": "SAUL-OS 建号前端注入",
+          "findRegex": "\\[SAUL-OS\\]\\s*INIT",
+          "replaceString": "<iframe src=\"https://ddsadasfdxc.github.io/heisenberg-sandbox/onboard.html\" style=\"width:100%;min-height:760px;border:none;border-radius:14px;background:#0c0b09\" allowtransparency=\"true\"></iframe>",
+          "trimStrings": false,
+          "placement": 0,
+          "disabled": false,
+          "markdownOnly": false,
+          "promptOnly": false,
+          "runOnEdit": false,
+          "substituteRegex": true,
+          "minDepth": 0,
+          "maxDepth": 1000
+        },
+        {
+          "scriptName": "建号完成 → 状态确认（触发initvar）",
+          "findRegex": "\\[SAUL-OS\\]\\s*READY\\s*([\\s\\S]{0,2000}?)",
+          "replaceString": "[系统] 身份登记完成，正在初始化世界状态...\n<initvar>请根据上方玩家建号信息填入全部字段</initvar>",
+          "trimStrings": false,
+          "placement": 0,
+          "disabled": false,
+          "markdownOnly": false,
+          "promptOnly": false,
+          "runOnEdit": false,
+          "substituteRegex": true,
+          "minDepth": 0,
+          "maxDepth": 1000
+        }
+      ],
+      "frontend": {
+        "url": "https://ddsadasfdxc.github.io/heisenberg-sandbox/onboard.html",
+        "repo": "ddsadasfdxc/heisenberg-sandbox",
+        "note": "AI开场白占位符 [SAUL-OS] INIT 被正则替换为建号 iframe；玩家填表后合成消息触发 initvar"
       }
     }
   }
