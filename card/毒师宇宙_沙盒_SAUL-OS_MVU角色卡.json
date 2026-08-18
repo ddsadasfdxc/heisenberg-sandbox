@@ -1422,53 +1422,49 @@
         "scripts": [
           {
             "type": "script",
-            "id": "357ca3bb-6bf2-41dc-9737-cea7862679e8",
+            "id": "mvupdate_engine",
             "name": "MVU·变量更新引擎",
-            "content": "import 'https://gcore.jsdelivr.net/gh/MagicalAstrogy/MagVarUpdate@master/artifact/bundle.js'",
+            "content": "import 'https://testingcf.jsdelivr.net/gh/Mag-Mixtape/toolkit@main/vars/module.mjs';",
+            "info": "MVU 变量框架核心脚本（远端 ES 模块导入，负责 <initvar>/<setvar>/<patchvar> 解析）",
             "enabled": true,
-            "export_with": true
+            "data": {},
+            "button": {
+              "buttons": [],
+              "enabled": false
+            },
+            "export_with": {
+              "button": true,
+              "data": true
+            }
           },
           {
             "type": "script",
-            "id": "2ef678d3-e7c5-4156-9980-62b64646de84",
-            "name": "建号终端·可交互界面",
-            "content": "(function () {\n    'use strict';\n    // 酒馆助手(TH) type:script：直接运行于宿主页面上下文（可访问 $ / #send_textarea / #send_but）\n    var ID = 'saulos-onboard-terminal';\n    function isHost() {\n        try { return !!(window.parent && window.parent.jQuery && window.parent.document && window.parent.document.getElementById('send_textarea')); }\n        catch (e) { return false; }\n    }\n    var W = (isHost() ? window.parent : window);\n    var $ = W.jQuery || (typeof jQuery !== 'undefined' ? jQuery : null);\n    var doc = W.document || document;\n    if (!$) { return; } // 宿主无 jQuery（非酒馆环境），静默退出\n    if (doc.getElementById(ID)) { return; } // 已注入，防止重复\n\n    // 注入面板到聊天区顶部\n    var panel = $('<div id=\"' + ID + '\" style=\"border:1px solid #d99a1b;border-radius:14px;background:linear-gradient(160deg,#151210,#0c0b09);padding:16px 20px;margin:10px 0;font-family:monospace;color:#e8c76a;box-shadow:0 4px 18px rgba(0,0,0,.55)\"></div>');\n\n    var hd = $('<div style=\"font-size:14px;font-weight:700;color:#f2c94c;border-bottom:1px solid rgba(217,154,27,.35);padding-bottom:8px;margin-bottom:10px\">☢ SAUL·OS 毒师宇宙 · 沙盒身份登记终端 <span style=\"float:right;font-size:11px;color:#8a6d3b;font-weight:400\">HEISENBERG v1.2</span></div>');\n    panel.append(hd);\n\n    // 表单容器（可编辑）\n    var grid = $('<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;font-size:12px\"></div>');\n    var fields = [\n        ['type','身份类型','穿越者'],['name','姓名','张三'],['sex','性别','男'],['age','年龄','30'],\n        ['job','职业起点','自由职业'],['origin','出身','阿尔伯克基'],['trait','性格','谨慎'],\n        ['goal','核心目标','白手起家'],['morality','道德底线','灰色地带'],\n        ['year','时间线年份','2002'],['era','时代标签','风骚律师时代'],\n        ['cash','初始资金 $','5000'],['purity','初始纯度 %','50'],['scale','初始规模','零散']\n    ];\n    fields.forEach(function (f) {\n        var box = $('<div style=\"display:flex;flex-direction:column\"></div>');\n        box.append($('<label style=\"color:#d99a1b;font-size:10.5px;margin-bottom:2px\"></label>').text(f[1]));\n        box.append($('<input data-sf=\"' + f[0] + '\" style=\"background:#060505;border:1px solid rgba(217,154,27,.3);border-radius:6px;color:#f5e6c8;padding:6px 8px;font-size:12px;font-family:inherit\"></input>').val(f[2]));\n        grid.append(box);\n    });\n    // DLC 全宽\n    var dlcBox = $('<div style=\"display:flex;flex-direction:column;grid-column:1/-1\"></div>');\n    dlcBox.append($('<label style=\"color:#d99a1b;font-size:10.5px;margin-bottom:2px\"></label>').text('DLC 玩法（逗号分隔）'));\n    dlcBox.append($('<input data-sf=\"dlc\" style=\"background:#060505;border:1px solid rgba(217,154,27,.3);border-radius:6px;color:#f5e6c8;padding:6px 8px;font-size:12px;font-family:inherit\"></input>').val('洗衣帝国、卡特尔战争'));\n    grid.append(dlcBox);\n    panel.append(grid);\n\n    // 按钮\n    var btns = $('<div style=\"display:flex;gap:10px;margin-top:14px\"></div>');\n    function buildCmd() {\n        function v(k, def) { var el = panel.find('[data-sf=\"' + k + '\"]'); return (el.length && el.val() && el.val().trim()) ? el.val().trim() : def; }\n        return '【毒师宇宙·沙盒 建号完成】\\n'\n            + '身份类型：' + v('type','穿越者') + '\\n'\n            + '姓名：' + v('name','张三') + '（' + v('sex','男') + '，' + v('age','30') + '岁）\\n'\n            + '职业起点：' + v('job','自由职业') + '\\n'\n            + '出身：' + v('origin','阿尔伯克基') + '\\n'\n            + '性格：' + v('trait','谨慎') + '\\n'\n            + '核心目标：' + v('goal','白手起家') + ' | 道德底线：' + v('morality','灰色地带') + '\\n'\n            + '时间线：' + v('year','2002') + '年（' + v('era','风骚律师时代') + '）| 初始资金：$' + v('cash','5000') + ' | 初始纯度：' + v('purity','50') + '% | 初始规模：' + v('scale','零散') + '\\n'\n            + 'DLC：' + v('dlc','洗衣帝国、卡特尔战争') + '\\n'\n            + '请根据以上信息在主世界初始化我的状态，并开启对应剧情线。';\n    }\n    var previewBtn = $('<button type=\"button\" style=\"flex:1;border:none;border-radius:8px;padding:10px;font-size:12.5px;font-weight:700;cursor:pointer;background:rgba(217,154,27,.12);color:#e8c76a;border:1px solid rgba(217,154,27,.4)\"></button>').text('预览指令');\n    var sendBtn = $('<button type=\"button\" style=\"flex:1;border:none;border-radius:8px;padding:10px;font-size:12.5px;font-weight:700;cursor:pointer;background:linear-gradient(180deg,#e8c76a,#d99a1b);color:#1a1206\"></button>').text('生成 & 发送建号指令');\n    var note = $('<div id=\"saulos-preview\" style=\"display:none;margin-top:10px;padding:9px 13px;background:rgba(217,154,27,.08);border-left:3px solid #d99a1b;border-radius:6px;font-size:11px;color:#b8a268;white-space:pre-wrap;font-family:monospace\"></div>');\n    btns.append(previewBtn, sendBtn);\n    panel.append(btns, note);\n\n    previewBtn.on('click', function () { note.text(buildCmd()).show(); });\n    sendBtn.on('click', function () {\n        var cmd = buildCmd();\n        var ta = doc.getElementById('send_textarea');\n        if (!ta) { note.text('未检测到 #send_textarea，请手动发送：\\n' + cmd).show(); return; }\n        ta.value = cmd;\n        ta.dispatchEvent(new Event('input', { bubbles: true }));\n        ta.dispatchEvent(new Event('change', { bubbles: true }));\n        var sb = doc.getElementById('send_but');\n        if (sb) { try { sb.click(); } catch (e) {} }\n        else { ta.focus(); }\n    });\n\n    // 挂载到宿主聊天区\n    var $chat = $('#chat');\n    if ($chat.length) { $chat.prepend(panel); }\n    else { $('body').prepend(panel); }\n})();",
+            "id": "saul_onboard_wizard",
+            "name": "建号终端·可交互向导",
+            "content": "(function () {\n  'use strict';\n  // 在 iframe/扩展宿主中向上定位酒馆主窗口\n  function hostWindow() {\n    try {\n      if (window.parent && window.parent.document) return window.parent;\n    } catch (e) {}\n    return window;\n  }\n  function ready(fn) {\n    var h = hostWindow();\n    if (h.jQuery) return fn(h);\n    // 酒馆注入 TH 脚本时 jQuery 通常已在全局，先合一帧再取\n    setTimeout(function () { ready(fn); }, 40);\n  }\n  ready(function (H) {\n    var $ = H.jQuery, doc = H.document;\n    if (!$ || !$('#chat').length) return;\n    var SID = 'saul_onboard_wizard';\n    if (doc.getElementById(SID)) return; // 防重复注入\n    // —— 状态机 ——\n    var state = {};\n    var STEP = [\n      { key: 'identityType', title: '① 选择身份', opts: ['穿越者','原著角色','原创人物'],\n        get: function () { setTimeout(updatePreview, 0); } },\n      { key: 'name', title: '② 设定姓名 / 性别 / 年龄', opts: null, free: 'name,男,30',\n        get: function () { setTimeout(updatePreview, 0); } },\n      { key: 'background', title: '③ 选择背景', opts: ['本地阿尔伯克基','外乡电信诈欺','体制内教师'],\n        get: function () { setTimeout(updatePreview, 0); } },\n      { key: 'timeline', title: '④ 选择时代', opts: ['2002 风骚律师时代','2008 毒师高峰','2010 逃亡终局'],\n        get: function () { setTimeout(updatePreview, 0); } },\n      { key: 'dlc', title: '⑤ 选择 DLC（可多选）', opts: ['洗衣帝国','卡特尔战争','DEA卧底'], multi: true,\n        get: function () { setTimeout(updatePreview, 0); } }\n    ];\n    var stepIdx = 0;\n\n    // —— 渲染工具 ——\n    function btn(label, onClick, classes) {\n      var b = doc.createElement('button');\n      b.textContent = label;\n      b.className = 'saul-btn ' + (classes || '');\n      b.addEventListener('click', onClick);\n      return b;\n    }\n    function showStep(i) {\n      var body = doc.getElementById(SID + '_body');\n      if (!body) return;\n      body.innerHTML = '';\n      var st = STEP[i];\n      var h = doc.createElement('div');\n      h.className = 'saul-step-title';\n      h.textContent = st.title;\n      body.appendChild(h);\n      if (st.free) {\n        var sc = st.free.split(',');\n        var inputs = {};\n        sc.forEach(function (pk, idx) {\n          var wrap = doc.createElement('div');\n          wrap.className = 'saul-field';\n          var lab = doc.createElement('span');\n          lab.textContent = ['姓名','性别','年龄'][idx] + ':';\n          wrap.appendChild(lab);\n          var inp = doc.createElement('input');\n          inp.type = 'text';\n          inp.placeholder = pk === 'name' ? '张三' : pk === '男' ? '男/女/其他' : '30';\n          wrap.appendChild(inp);\n          inputs[pk] = inp;\n          body.appendChild(wrap);\n        });\n        var nb = btn('下一步 →', function () {\n          state.name = (inputs.name && inputs.name.value) || '未命名';\n          state.sex = (inputs['男'] && inputs['男'].value) || '男';\n          state.age = (inputs['30'] && inputs['30'].value) || '30';\n          stepIdx++; render();\n        }, 'primary');\n        body.appendChild(nb);\n      } else {\n        var grp = doc.createElement('div');\n        grp.className = 'saul-opts';\n        st.opts.forEach(function (o) {\n          var ob = btn(o, function () {\n            if (st.multi) {\n              (state[st.key] = state[st.key] || []);\n              var a = state[st.key];\n              var at = a.indexOf(o);\n              if (at >= 0) a.splice(at, 1); else a.push(o);\n              render();\n            } else {\n              state[st.key] = o; st.get();\n              stepIdx++; render();\n            }\n          }, 'opt');\n          if (st.multi && state[st.key] && state[st.key].indexOf(o) >= 0) ob.classList.add('sel');\n          grp.appendChild(ob);\n        });\n        body.appendChild(grp);\n      }\n      if (i > 0) {\n        var back = btn('← 上一步', function () { stepIdx--; render(); }, 'ghost');\n        body.appendChild(back);\n      }\n    }\n    function buildPrompt() {\n      var tl = state.timeline || '2002 风骚律师时代';\n      var year = tl.indexOf('2008') >= 0 ? 2008 : tl.indexOf('2010') >= 0 ? 2010 : 2002;\n      var era = tl.indexOf('2008') >= 0 ? '毒师高峰' : tl.indexOf('2010') >= 0 ? '逃亡终局' : '风骚律师';\n      var bg = state.background || '本地阿尔伯克基';\n      var origin = bg.indexOf('电信') >= 0 ? '外乡' : bg.indexOf('体制') >= 0 ? '体制内' : '阿尔伯克基';\n      var moral = state.morality || '灰色地带';\n      var scale = state.scale || '零散';\n      var dlc = (state.dlc && state.dlc.length) ? state.dlc.join('、') : '无';\n      return '【毒师宇宙·沙盒 建号完成】\\n'\n        + '身份类型：' + (state.identityType || '穿越者') + '\\n'\n        + '姓名：' + (state.name || '张三') + '（' + (state.sex || '男') + '，' + (state.age || '30') + '岁）\\n'\n        + '职业起点：' + (state.job || '自由职业') + '\\n'\n        + '出身：' + origin + '\\n'\n        + '性格：' + (state.trait || '谨慎') + '\\n'\n        + '核心目标：' + (state.goal || '白手起家') + ' | 道德底线：' + moral + '\\n'\n        + '时间线：' + year + '年（' + era + '）| 初始资金：$5000 | 初始纯度：50% | 初始规模：' + scale + '\\n'\n        + 'DLC：' + dlc;\n    }\n    function updatePreview() {\n      var p = doc.getElementById(SID + '_preview');\n      if (p) p.textContent = buildPrompt();\n    }\n    function sendPrompt() {\n      var txt = buildPrompt();\n      // 写入输入框\n      var ta = doc.getElementById('send_textarea');\n      if (ta) {\n        ta.value = txt;\n        ta.dispatchEvent(new Event('input', { bubbles: true }));\n        ta.dispatchEvent(new Event('change', { bubbles: true }));\n      }\n      // 触发发送\n      setTimeout(function () {\n        var sb = doc.getElementById('send_but');\n        if (sb) { sb.click(); return; }\n        // 兜底：访问下层 iframe 的发送按钮\n        try {\n          var ih = H.document.querySelector('iframe .send_but') || H.document.querySelector('textarea#send_textarea');\n          if (ih) (ih.closest && ih.closest('.mes_buttons')) || '';\n        } catch (e) {}\n      }, 300);\n    }\n    function render() {\n      showStep(stepIdx);\n      updatePreview();\n      var nav = doc.getElementById(SID + '_nav');\n      if (nav) {\n        nav.innerHTML = '';\n        var prog = doc.createElement('span');\n        prog.className = 'saul-prog';\n        prog.textContent = (stepIdx + 1) + ' / ' + STEP.length;\n        nav.appendChild(prog);\n        nav.appendChild(btn('开始游戏 ▶', sendPrompt, 'start'));\n      }\n    }\n\n    // —— 注入容器 ——\n    var wrap = doc.createElement('div');\n    wrap.id = SID;\n    wrap.className = 'saul-wizard';\n    var head = doc.createElement('div');\n    head.className = 'saul-head';\n    head.innerHTML = '☢ SAUL·OS 毒师宇宙 · 沙盒身份登记终端 <small>HEISENBERG UNIVERSE v1.2</small>';\n    var body = doc.createElement('div');\n    body.id = SID + '_body';\n    body.className = 'saul-body';\n    var pre = doc.createElement('div');\n    pre.id = SID + '_preview';\n    pre.className = 'saul-preview';\n    var nav = doc.createElement('div');\n    nav.id = SID + '_nav';\n    nav.className = 'saul-nav';\n    wrap.appendChild(head); wrap.appendChild(body); wrap.appendChild(pre); wrap.appendChild(nav);\n    // 插入聊天流末尾\n    $('#chat').append(wrap);\n    // 注入内联样式（作用域限定 saul-）\n    var style = doc.createElement('style');\n    style.textContent = '.saul-wizard{max-width:640px;margin:14px auto;background:linear-gradient(160deg,#18140f,#0c0b09);border:1px solid #d99a1b;border-radius:14px;padding:16px 20px;color:#e8c76a;font-family:monospace;box-shadow:0 6px 24px rgba(0,0,0,.55)}'\n      + '.saul-head{font-size:15px;font-weight:700;color:#f2c94c;border-bottom:1px solid rgba(217,154,27,.35);padding-bottom:8px;margin-bottom:12px}'\n      + '.saul-head small{color:#b8a268;font-weight:400}'\n      + '.saul-step-title{font-size:13px;color:#d99a1b;margin-bottom:10px}'\n      + '.saul-opts{display:flex;flex-wrap:wrap;gap:8px}'\n      + '.saul-btn{cursor:pointer;border:1px solid #d99a1b;background:rgba(217,154,27,.08);color:#f2c94c;padding:8px 14px;border-radius:8px;font-family:monospace;font-size:13px;margin:4px 2px}'\n      + '.saul-btn:hover{background:rgba(217,154,27,.25)}'\n      + '.saul-btn.sel{background:#d99a1b;color:#0c0b09;font-weight:700}'\n      + '.saul-btn.start{background:#d99a1b;color:#0c0b09;font-weight:700;padding:9px 18px}'\n      + '.saul-btn.ghost{color:#8a7a4a;border-color:#5a4c2a}'\n      + '.saul-field{margin:6px 0;font-size:13px}'\n      + '.saul-field span{color:#b8a268;margin-right:6px}'\n      + '.saul-field input{background:#0c0b09;border:1px solid #4a3c1a;color:#f5e6c8;border-radius:6px;padding:5px 8px;font-family:monospace}'\n      + '.saul-preview{margin-top:12px;padding:10px;background:rgba(0,0,0,.35);border-radius:8px;font-size:11px;color:#b8a268;white-space:pre-wrap;max-height:120px;overflow:auto}'\n      + '.saul-nav{margin-top:10px;display:flex;align-items:center;justify-content:space-between}'\n      + '.saul-prog{color:#8a7a4a;font-size:12px}';\n    doc.head.appendChild(style);\n    render();\n  });\n})();",
+            "info": "多步可交互建号向导：选身份→背景→时代→DLC→点「开始游戏」自动复制提示词并发送（宿主 jQuery 注入 #chat，可在酒馆助手中直接编辑）",
             "enabled": true,
-            "export_with": true
+            "data": {},
+            "button": {
+              "buttons": [
+                {
+                  "name": "打开建号向导",
+                  "visible": true
+                },
+                {
+                  "name": "重新生成提示词",
+                  "visible": true
+                }
+              ],
+              "enabled": true
+            },
+            "export_with": {
+              "button": true,
+              "data": true
+            }
           }
         ],
-        "variables": [
-          "identity.type",
-          "identity.name",
-          "identity.sex",
-          "identity.age",
-          "identity.job",
-          "identity.origin",
-          "identity.trait",
-          "identity.scale",
-          "identity.goal",
-          "identity.morality",
-          "timeline",
-          "era",
-          "assets.cash",
-          "purity",
-          "dlc",
-          "cash",
-          "supply_chain",
-          "heat",
-          "legal_exposure",
-          "territory",
-          "rep",
-          "standing.salamanca",
-          "standing.gus",
-          "standing.dea",
-          "standing.street",
-          "assets.property",
-          "assets.inventory",
-          "assets.labs",
-          "phase",
-          "log"
-        ]
+        "variables": {}
       },
       "mvu": {
         "schema": "{\n  cash: z.number().min(0).describe(\"现金余额（美元）\"),\n  purity: z.number().min(0).max(99.1).describe(\"产品纯度（%）\"),\n  supply_chain: z.number().min(0).max(100).describe(\"供应链强度 0-100\"),\n  heat: z.number().min(0).max(100).describe(\"DEA通缉/危险度 0-100\"),\n  legal_exposure: z.number().min(0).max(100).describe(\"法律风险敞口 0-100\"),\n  standing: {\n    salamanca: z.number().min(-100).max(100).describe(\"萨拉曼卡阵营关系\"),\n    gus: z.number().min(-100).max(100).describe(\"古斯网络关系\"),\n    dea: z.number().min(-100).max(100).describe(\"DEA敌意/接触\"),\n    street: z.number().min(-100).max(100).describe(\"街头势力关系\")\n  },\n  territory: z.number().min(0).max(100).describe(\"地盘控制力 0-100\"),\n  rep: z.number().min(0).max(100).describe(\"江湖声望 0-100\"),\n  assets: {\n    cash: z.number().min(0).describe(\"流动资产\"),\n    property: z.number().min(0).describe(\"固定资产（洗衣厂/房产等）\"),\n    inventory: z.number().min(0).describe(\"在库产品（单位）\"),\n    labs: z.number().min(0).describe(\"实验室/产线数量\")\n  },\ntimeline: z.string().describe(\"时间线年份\"),\n  era: z.string().describe(\"时代主题（风骚律师/毒师高峰/逃亡/自定义）\"),\n  identity: {\n    type: z.enum([\"穿越者\",\"原著角色\",\"原创人物\"]).describe(\"身份类型\"),\n    name: z.string().describe(\"姓名/代号\"),\n    sex: z.string().describe(\"性别\"),\n    age: z.string().describe(\"年龄\"),\n    job: z.string().describe(\"职业起点\"),\n    origin: z.string().describe(\"出身/出生地\"),\n    trait: z.string().describe(\"性格特质\"),\n    scale: z.string().describe(\"初始规模（零散/小作坊/分销网络/卡特尔）\"),\n    goal: z.string().describe(\"核心目标\"),\n    morality: z.enum([\"绝对守序\",\"灰色地带\",\"无底线\"]).describe(\"道德底线\")\n  },\n  dlc: z.array(z.string()).describe(\"已开启DLC玩法\"),\n  phase: z.string().describe(\"当前主剧情阶段\"),\n  log: z.array(z.string()).max(20).describe(\"最近事件日志（最多20条）\")\n}",
@@ -1497,7 +1493,7 @@
           "substituteRegex": 0,
           "minDepth": null,
           "maxDepth": null,
-          "id": "554da714-2fc4-46de-8b1f-9315c12666ff"
+          "id": "f8b0be09-ad01-4434-b400-4ffc1f5df2c6"
         },
         {
           "scriptName": "SAUL-OS 建号配置序列解析",
@@ -1515,7 +1511,7 @@
           "substituteRegex": 0,
           "minDepth": null,
           "maxDepth": null,
-          "id": "b2f648a7-8883-4bb8-8a1e-06a3d2deeb53"
+          "id": "6ae9c508-3e4b-43b1-a46e-f0e832cc2fce"
         }
       ],
       "frontend": {
