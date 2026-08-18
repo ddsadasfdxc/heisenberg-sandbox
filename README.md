@@ -40,3 +40,11 @@ build/modules/05_lorebook.js  # 结构化世界书(18条)
 ```
 
 > 仓库为卡片与前端资源的唯一维护源头，改动后经 GitHub Pages 自动同步生效。
+
+
+## 🧬 MVU 酒馆助手脚本绑定（v1.1.0）
+已参考《剑来》命轨卡标准，绑定 `tavern_helper` 脚本：
+- **毒师宇宙·建号配置序列解析**：捕获前端建号消息 → `{{setVar}}` 写入 15 项身份/时间线/资金变量
+- **MVU·变量更新引擎**：加载 MagVarUpdate bundle 实现剧情生长式变量持久化
+- 30 项变量清单，覆盖 identity/timeline/era/assets/standing/heat/territory/rep/phase/log
+- 前端：`https://ddsadasfdxc.github.io/heisenberg-sandbox/onboard.html`（精确年份滑杆 1985–2025）
