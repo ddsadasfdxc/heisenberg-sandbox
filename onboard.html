@@ -139,10 +139,28 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 /* 精灵/装饰 */
 .gears{position:fixed;right:-40px;bottom:-40px;width:180px;height:180px;border:2px dashed var(--line);border-radius:50%;animation:spinSlow 40s linear infinite;opacity:.3;pointer-events:none}
 .header-rule{height:3px;background:linear-gradient(90deg,var(--yellow-2),var(--red),transparent);border:none;margin:0 0 18px;opacity:.6}
+/* ===== 开机过场动画（SAUL-OS boot splash） ===== */
+@keyframes bootOut{0%{opacity:1}80%{opacity:1}100%{opacity:0}}
+@keyframes bootLogo{0%{opacity:0;letter-spacing:14px;transform:scale(.92)}100%{opacity:1;letter-spacing:4px;transform:scale(1)}}
+@keyframes bootText{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes bootLine{0%{width:0}100%{width:100%}}
+.boot{position:fixed;inset:0;z-index:9999;background:radial-gradient(900px 500px at 50% 30%,rgba(232,188,67,.08),transparent 60%),#050505;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font-family:var(--mono);animation:bootOut 1.6s ease forwards}
+.boot .b-logo{font-size:40px;font-weight:700;color:var(--yellow-2);text-shadow:0 0 24px rgba(232,188,67,.5);animation:bootLogo 1s ease both}
+.boot .b-logo em{color:var(--red);font-style:normal}
+.boot .b-title{font-size:13px;letter-spacing:6px;color:var(--sub);animation:bootText .8s .3s ease both}
+.boot .b-line{width:240px;height:1px;background:linear-gradient(90deg,transparent,var(--yellow-2),transparent);position:relative;overflow:hidden}
+.boot .b-line i{position:absolute;top:0;left:0;height:100%;background:var(--green);animation:bootLine .9s .2s ease both}
+.boot .b-ver{font-size:10px;color:#5a5244;letter-spacing:3px;animation:bootText .8s .5s ease both}
 @media(max-width:520px){.row{grid-template-columns:1fr}.seg button{min-width:100%}}
 </style>
 </head>
 <body>
+<div class="boot" id="boot">
+  <div class="b-logo">SAUL<span>·</span><em>OS</em></div>
+  <div class="b-title">毒师宇宙 · 沙盒身份登记终端</div>
+  <div class="b-line"><i></i></div>
+  <div class="b-ver">HEISENBERG UNIVERSE — SANDBOX v1.0</div>
+</div>
 <div class="scanline"></div>
 <div class="particles" id="particles"></div>
 <div class="gears"></div>
@@ -467,6 +485,9 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&$('nextBtn')&&!$('ne
 
 /* ===== 开场加载动画 ===== */
 (function(){
+  // 开机过场动画结束后移除 splash
+  const boot=document.getElementById('boot');
+  if(boot){setTimeout(()=>{boot.remove();},1700);}
   // 标题闪烁一次进入
   const w=document.querySelector('.wrap');
   if(w){w.style.opacity='0';w.style.transform='translateY(10px)';w.style.transition='opacity .8s ease, transform .8s ease';setTimeout(()=>{w.style.opacity='1';w.style.transform='none';},150);}
