@@ -154,14 +154,25 @@ input:focus,select:focus,textarea:focus{border-color:var(--yellow-2);box-shadow:
 <!-- step3 -->
 <section class="card hidden" id="s3">
   <h2><span class="n">03</span>时间线起点</h2>
-  <p class="desc">选择你降临毒师宇宙的时间坐标。不同的年份对应截然不同的世界格局。</p>
-  <div class="opt-grid" id="timeline">
-    <div class="opt" data-v="2002">2002 基础<small>风骚律师时代 · 吉米初心</small></div>
-    <div class="opt" data-v="2008">2008 并与<small>毒师高峰 · 蓝冰纪元</small></div>
-    <div class="opt" data-v="2010">2010 后<small>后毒师 · 逃亡时代</small></div>
-    <div class="opt" data-v="自定义">自定义<small>任意年 · 完全掌控</small></div>
+  <p class="desc">选择你降临毒师宇宙的具体年份。年份精确到每一年，不同年代对应截然不同的世界格局。</p>
+
+  <div class="field"><label>精确年份 <b id="yearVal" style="color:var(--yellow-2);font-family:var(--mono)">2002</b></label>
+    <input type="range" id="cyearRange" min="1985" max="2025" value="2002" step="1">
+    <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--sub)">
+      <span>1985</span><span>1995</span><span>2002</span><span>2008</span><span>2010</span><span>2015</span><span>2025</span>
+    </div>
   </div>
-  <div class="field hidden" id="customYear"><label>自定义年份</label><input type="number" id="cyear" value="2005" min="1985" max="2025"></div>
+
+  <div class="field"><label>时代主题（随年份自动识别，可手动微调）</label>
+    <div class="seg" id="pera">
+      <button class="act" data-v="风骚律师时代">风骚律师时代<small>≈2002-2009 · 吉米初心</small></button>
+      <button data-v="毒师高峰">毒师高峰<small>≈2008-2010 · 蓝冰纪元</small></button>
+      <button data-v="逃亡时代">逃亡时代<small>≈2010+ · 后毒师</small></button>
+      <button data-v="自定义节点">自定义节点<small>任意剧情脉点</small></button>
+    </div>
+  </div>
+
+  <div class="hint">▸ 滑杆选择精确年份，时代主题会随年份推荐对应的世界格局。年份范围 1985–2025，覆盖风骚律师前史、毒师全期与后毒师时代。</div>
 </section>
 
 <!-- step4 -->
@@ -256,8 +267,23 @@ function bindOpt(id,cb){
 bindSeg('idType');
 bindSeg('pmorality');
 bindSeg('pscale');
-bindOpt('timeline',v=>{
-  $('customYear').classList.toggle('hidden',v!=='自定义');
+bindSeg('pera');
+
+/* 精确年份滑杆 → 实时显示 + 自动推荐时代主题 */
+const yearRange=$('cyearRange'), yearValEl=$('yearVal');
+function eraOf(y){
+  if(y>=2002&&y<=2009)return '风骚律师时代';
+  if(y>=2008&&y<=2010)return '毒师高峰';
+  if(y>2010)return '逃亡时代';
+  return '自定义节点';
+}
+function setEra(era){
+  document.querySelectorAll('#pera [data-v]').forEach(b=>b.classList.toggle('act',b.dataset.v===era));
+}
+yearRange.addEventListener('input',()=>{
+  const y=+yearRange.value;
+  yearValEl.textContent=y;
+  setEra(eraOf(y));
 });
 
 /* 原著角色快捷填入 */
@@ -290,8 +316,8 @@ function collect(){
   const trait=$('ptrait').value.trim()||'谨慎';
   const goal=$('pgoalsel').value;
   const mor=activeVal('pmorality','灰色地带');
-  let year=activeVal('timeline','2002');
-  if(year==='自定义')year=$('cyear').value;
+  const year=$('cyearRange').value;
+  const era=activeVal('pera',eraOf(+year));
   const cash=$('pcash').value;
   const purity=$('ppurity').value;
   const scale=activeVal('pscale','零散');
@@ -300,7 +326,7 @@ function collect(){
   if($('dlcCartel').checked)dlc.push('卡特尔战争');
   if($('dlcLaw').checked)dlc.push('法律攻防');
   if($('dlcFamily').checked)dlc.push('家庭暗线');
-  return {idType,name,gender,age,job,origin,trait,goal,mor,year,cash,purity,scale,dlc};
+  return {idType,name,gender,age,job,origin,trait,goal,mor,year,era,cash,purity,scale,dlc};
 }
 function activeVal(id,def){const b=document.querySelector('#'+id+' [data-v].act');return b?b.dataset.v:def;}
 
@@ -312,7 +338,7 @@ function buildPrompt(d){
     +`出身：${d.origin}\n`
     +`性格：${d.trait}\n`
     +`核心目标：${d.goal} | 道德底线：${d.mor}\n`
-    +`时间线：${d.year} | 初始资金：$${d.cash} | 初始纯度：${d.purity}% | 初始规模：${d.scale}\n`
+    +`时间线：${d.year}年（${d.era}）| 初始资金：$${d.cash} | 初始纯度：${d.purity}% | 初始规模：${d.scale}\n`
     +`DLC：${d.dlc.length?d.dlc.join('、'):'无（基础沙盒）'}\n`
     +`请根据以上信息在主世界初始化我的状态，并开启对应剧情线。`;
 }
